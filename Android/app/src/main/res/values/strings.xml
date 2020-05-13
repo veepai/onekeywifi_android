@@ -5,8 +5,11 @@
     <string name="wifi_ap_name">AP Name</string>
     <string name="wifi_ap_psw">AP PSW</string>
     <string name="cus_info">Custom Info</string>
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
+    <string name="start">Start(play)</string>
+    <string name="stop">Stop（play）</string>
+    <string name="Startplay2">Start(play2)</string>
+    <string name="Stopplay2">Stop（play2）</string>
+
     <string name="get_version">Get Version</string>
     <string name="hint_name">Please Input Name</string>
     <string name="hint_password">Please Input Password</string>
@@ -45,5 +48,8 @@
     <string name="v1v4_interval">V1/V4</string>
     <string name="v5_interval">V5</string>
     <string name="send_interval">Interval (ms)</string>
+    <string name="voice_tip">play和play2 使用区别：扫设备的二维码：{"ACT":"Add","ID":"VSTK000000ABCDE","DT":"C24","WiFi":"18"}，当WiFi 是18或者19，请使用play2，当WiFi 是0或者1，请使用play，如有疑问，请联系dfc@vstarcam.com
+    </string>
+
 
 </resources>

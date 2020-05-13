@@ -35,10 +35,10 @@ import java.util.List;
 
 
 public class MainActivity extends Activity {
-
+    private voice2.encoder.VoicePlayer newplayer = new voice2.encoder.VoicePlayer();
     private VoicePlayer player = new VoicePlayer();
-    private Button mStartButton;
-    private Button mStopButton;
+    private Button mStartButton,newstartButton;
+    private Button mStopButton,newstopButton;
     private ProgressBar mProgressBar;
     
     private EditText mNameEdit;
@@ -67,7 +67,15 @@ public class MainActivity extends Activity {
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                 REQUEST_PERMISSION);
     }
-
+    //**********************************************************public******************************
+    static {
+        try {
+            System.loadLibrary("voiceRecog2");
+            Log.d("voice_camera_config", "load library success");
+        } catch (Exception ex) {
+            Log.d("voice_camera_config", "load library failed!!!! ex="+ex);
+        }
+    }
 
     @TargetApi(23)
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -91,7 +99,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         mStartButton = (Button)this.findViewById(R.id.btn_start);
+        newstartButton = (Button)this.findViewById(R.id.btn_new_start);
         mStopButton = (Button)this.findViewById(R.id.btn_stop);
+        newstopButton = (Button)this.findViewById(R.id.btn_newstop);
         mProgressBar = (ProgressBar)this.findViewById(R.id.sending_indicator);
         
         mNameEdit = (EditText)this.findViewById(R.id.et_name);    //name
@@ -252,6 +262,23 @@ public class MainActivity extends Activity {
                 if (boThread != null && boThread.isAlive()){
                     boThread.interrupt();
                 }
+            }
+        });
+
+
+        newstartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userid = "10000";//6位随机数
+                String Password = mPswEdit.getText().toString();
+                startNewSound(userid,sendMac,Password);
+            }
+        });
+
+        newstopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopNewSound();
             }
         });
     }
@@ -633,6 +660,38 @@ public class MainActivity extends Activity {
             }
         }
         
+    }
+
+
+    //新声波发送
+    private void startNewSound(String userid,String mac,String pwd) {
+        Log.d("voice_camera_config", "2 send sound：mac="+mac+", userid="+userid+", pwd="+pwd);
+        int freqs[] = new int[19];
+        int baseFreq = 6500;
+        for(int i = 0; i < freqs.length; i ++) {
+            freqs[i] = baseFreq + i * 150;
+        }
+        try {
+            newplayer.setFreqs(freqs);//设置频率
+            String sendStr = mac.replace(":","")+userid;
+            Log.d("voice_camera_config", "2 send sound：sendStr="+sendStr);
+            newplayer.play(voice2.encoder.DataEncoder.encodeSSIDWiFi(sendStr, pwd), 60, 1000);
+            //ssid： wifi 的 ssid
+            //pwd： wifi 的密码
+            //1:播放声波的次数
+            //1000:播放声波的间隔时间
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("voice_camera_config", "2 send sound：e="+e);
+        }
+
+    }
+
+    private void stopNewSound() {
+        if(newplayer !=null)
+        {
+            newplayer.stop();
+        }
     }
     
 }
